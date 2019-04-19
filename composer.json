@@ -1,0 +1,19 @@
+{
+    "name": "daniel/api-php",
+    "description": "API REST",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "danieljuniorce",
+            "email": "danieljuniorce@hotmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+      "psr-4": {
+        "Core\\": "core/",
+        "Controllers\\": "controller/",
+        "Models\\": "model"
+      }
+    }
+}
