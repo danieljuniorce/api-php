@@ -6,7 +6,11 @@ class Users extends Connect
 {
   public function selectUsers()
   {
-    return $this->select('users');
+    return $this->selectAll('users');
+  }
+  public function selectUserOfId($id)
+  {
+    return $this->selectOfId('users', $id);
   }
 }
 

@@ -10,12 +10,28 @@ class Connect extends PDO
     $this->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
   }
 
-  public function select($table)
+  //Select the of all data in table;
+  public function selectAll($table)
   {
     $sqlResult = $this->query("SELECT * FROM $table ORDER BY id");
 
     if ($sqlResult->rowCount() > 0) {
       return json_encode($sqlResult->fetchAll(PDO::FETCH_ASSOC));
+    } else {
+      return json_encode(
+        array(
+          'empty' => ''
+        )
+      );
+    }
+  }
+  //Select the of id in table
+  public function selectOfId($table, $id)
+  {
+    $sqlResult = $this->query("SELECT * FROM $table WHERE id = '$id'");
+    
+    if ($sqlResult->rowCount() > 0) {
+      return json_encode($sqlResult->fetch(PDO::FETCH_ASSOC));
     } else {
       return json_encode(
         array(
