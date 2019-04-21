@@ -6,14 +6,14 @@
   {
     public function index()
     {
-      $jwt = new JWT();
-
       $connect = new Users();
       $connect
-        ->updateOfId('users', '1', array(
-          "email" => "dada"
+        ->create('users', array(
+          "email" => "danieljuniorssce@hotmail.com",
+
         ));
     }
+
     public function selecionar($id)
     {
       $connect = new Users();

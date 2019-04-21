@@ -14,29 +14,25 @@ class Connect extends PDO
 
   public function create($table, $where)
   {
-    foreach ($where as $key => $value) {
-      //$query .= "$key = $value, ";
-      $params .= '`'.$key."`, ";
-      $values .= $value.", ";
+    //Manipulando os dados enviado pelo array no $where;
+    foreach($where as $colun => $value) {
+      //Prepando a coluna para utilização no prepara Ex: email = :email,
+      $prepareSQL = "$colun = :$colun, ";
     }
-    $params = \trim($params);
-    $last = $params{strlen($params)-1};
-    if (!strcmp($last,","))
-    {
-      $params = rtrim($params, 'a..z');
-      $params = rtrim($params, ',');
-    }
-    $values = trim($values);
-    $last = $values{strlen($values)-1};
-    if (!strcmp($last,","))
-    {
-      $values = rtrim($values, 'a..z');
-      $values = rtrim($values, ',');
-    }
+    //Removendo espaço em branco ao final da string;
+    $prepareSQL = \trim($prepareSQL);
+    //Retirando o último caractere da string, EX: email = :email, name = :name,
+    $prepareSQL = substr($prepareSQL, 0, -1);
 
-    echo (string)$query = "INSERT INTO `$table`($params) VALUES ($values)";
-    
-    $this->query($query);
+    //Preparando a query;
+    $query = $this->prepare("INSERT INTO $table SET $prepareSQL");
+
+    //Manipulando o array para utilizanção do envio da query;
+    foreach ($where as $colun => $value) {
+      $query->bindValue(":$colun", $value);
+    }
+    //Executando a query;
+    $query->execute();
   }
 
   //Select the of all data in table;
@@ -57,10 +53,12 @@ class Connect extends PDO
   //Select the of id in table
   public function selectOfId($table, $id)
   {
-    $sqlResult = $this->query("SELECT * FROM $table WHERE id = '$id'");
+    $query = $this->prepare("SELECT * FROM $table WHERE id = :id");
+    $query->bindValue(':id', $id);
     
-    if ($sqlResult->rowCount() > 0) {
-      return json_encode($sqlResult->fetch(PDO::FETCH_ASSOC));
+    $query->execute();
+    if ($query->rowCount() > 0) {
+      return json_encode($query->fetch(PDO::FETCH_ASSOC));
     } else {
       return json_encode(
         array(
@@ -72,25 +70,34 @@ class Connect extends PDO
 
   public function updateOfId($table, $id, $where)
   {
-    //Concatenação dos dados enviados pelo $where;
-    foreach ($where as $column => $value) {
-      $query .= "$column = $value, ";
+    //Manipulando os dados enviado pelo array no $where;
+    foreach($where as $colun => $value) {
+      //Prepando a coluna para utilização no prepara Ex: email = :email,
+      $prepareSQL = "$colun = :$colun, ";
     }
+    //Removendo espaço em branco ao final da string;
+    $prepareSQL = \trim($prepareSQL);
+    //Retirando o último caractere da string, EX: email = :email, name = :name,
+    $prepareSQL = substr($prepareSQL, 0, -1);
 
-    $query = trim($query);
-    $last = $query{strlen($query)-1};
-    if (!strcmp($last,","))
-    {
-      //Removendo a ultima virgula;
-      $query = rtrim($query, 'a..z');
-      $query = rtrim($query, ',');
+    //Preparando a query;
+    $query = $this->prepare("UPDATE $table SET $prepareSQL WHERE id = :id");
+
+    //Manipulando o array para utilizanção do envio da query;
+    foreach ($where as $colun => $value) {
+      $query->bindValue(":$colun", $value);
     }
-    //Query de update;
-    $this->query("UPDATE `$table` SET $query WHERE `id` = $id");
+    //Update baseado no id do dado na tabela;
+    $query->bindValue(':id', $id);
+    //Executando a query;
+    $query->execute();
   }
 
   public function deleteOfId($table, $id)
   {
-    $this->query("DELETE FROM $table WHERE id = $id");
+    $query = $this->prepare("DELETE FROM $table WHERE id = :id");
+    $query->bindValue(':id', $id);
+
+    $query->execute();
   }
 }
