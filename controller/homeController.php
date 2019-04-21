@@ -8,15 +8,11 @@
     {
       $jwt = new JWT();
 
-      echo $jwt->validateJWT(
-        $jwt->create(
-          array(
-            'id_user' => 12,
-            'name_user' => 'Daniel Souza'
-          )
-      ));
       $connect = new Users();
-      $connect->selectUsers();
+      $connect
+        ->updateOfId('users', '1', array(
+          "email" => "dada"
+        ));
     }
     public function selecionar($id)
     {

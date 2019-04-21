@@ -3,4 +3,8 @@
   //Requerimento da pasta do autoload em PSR-4;
   require 'vendor/autoload.php';
 
+  //Require da configuração global;
+  require 'config.php';
+
+  //Inicialização da classe de load do projeto;
   new \Core\Core();

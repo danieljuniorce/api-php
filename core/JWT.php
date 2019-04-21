@@ -43,7 +43,6 @@ class JWT
             } else {
                 return false;
             }
-
         } else {
             return false;
         }
