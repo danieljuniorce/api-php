@@ -30,7 +30,7 @@ class Core
         $action = 'index';
       }
     } else {
-      $controller = 'homeController';
+      $controller = 'userController';
       $action = 'index';
     }
 

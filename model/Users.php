@@ -12,6 +12,14 @@ class Users extends Connect
   {
     return $this->selectOfId('users', $id);
   }
+  public function updateUserForId($id, $campos)
+  {
+    return $this->updateOfId('users', $id, $campos);
+  }
+  public function deleteUserForId($id)
+  { 
+    return $this->deleteOfId('users', $id);
+  }
 }
 
 ?>

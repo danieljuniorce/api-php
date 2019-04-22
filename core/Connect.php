@@ -12,24 +12,23 @@ class Connect extends PDO
     $this->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
   }
 
-  public function create($table, $where)
+  public function create($table, $campos)
   {
+    $prepareSQL = [];
     //Manipulando os dados enviado pelo array no $where;
-    foreach($where as $colun => $value) {
+    foreach($campos as $column => $value) {
       //Prepando a coluna para utilização no prepara Ex: email = :email,
-      $prepareSQL = "$colun = :$colun, ";
+      $prepareSQL[] = "$column = :$column";
     }
-    //Removendo espaço em branco ao final da string;
-    $prepareSQL = \trim($prepareSQL);
     //Retirando o último caractere da string, EX: email = :email, name = :name,
-    $prepareSQL = substr($prepareSQL, 0, -1);
+    $prepareSQL = implode(',', $prepareSQL);
 
     //Preparando a query;
     $query = $this->prepare("INSERT INTO $table SET $prepareSQL");
 
     //Manipulando o array para utilizanção do envio da query;
-    foreach ($where as $colun => $value) {
-      $query->bindValue(":$colun", $value);
+    foreach ($campos as $column => $value) {
+      $query->bindValue(":$column", $value);
     }
     //Executando a query;
     $query->execute();
@@ -68,23 +67,22 @@ class Connect extends PDO
     }
   }
 
-  public function updateOfId($table, $id, $where)
+  public function updateOfId($table, $id, $campos)
   {
+    $prepareSQL = [];
     //Manipulando os dados enviado pelo array no $where;
-    foreach($where as $colun => $value) {
+    foreach($campos as $colun => $value) {
       //Prepando a coluna para utilização no prepara Ex: email = :email,
-      $prepareSQL = "$colun = :$colun, ";
+      $prepareSQL[] = "$colun = :$colun";
     }
-    //Removendo espaço em branco ao final da string;
-    $prepareSQL = \trim($prepareSQL);
     //Retirando o último caractere da string, EX: email = :email, name = :name,
-    $prepareSQL = substr($prepareSQL, 0, -1);
-
+    //$prepareSQL = substr($prepareSQL, 0, -2);
+    $prepareSQL = implode(',', $prepareSQL);
     //Preparando a query;
     $query = $this->prepare("UPDATE $table SET $prepareSQL WHERE id = :id");
 
     //Manipulando o array para utilizanção do envio da query;
-    foreach ($where as $colun => $value) {
+    foreach ($campos as $colun => $value) {
       $query->bindValue(":$colun", $value);
     }
     //Update baseado no id do dado na tabela;
